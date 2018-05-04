@@ -21,7 +21,6 @@ ENV WITH_DOC=${WITH_DOC:-OFF}
 
 ENV HOME /root
 # Add bash enhancements
-COPY ./paddle/scripts/docker/root/ /root/
 
 RUN apt-get update && \
     apt-get install -y \
@@ -35,6 +34,7 @@ RUN apt-get update && \
     clang-3.8 llvm-3.8 libclang-3.8-dev \
     net-tools libtool && \
     apt-get clean -y
+
 
 # Install Go and glide
 RUN wget -qO- https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz | \
@@ -102,6 +102,8 @@ RUN echo 'root:root' | chpasswd
 RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 EXPOSE 22
+
+RUN git clone -b release/0.12.0 https://github.com/PaddlePaddle/Paddle.git
 
 # development image default do build work
 CMD ["bash", "/paddle/paddle/scripts/docker/build.sh"]
